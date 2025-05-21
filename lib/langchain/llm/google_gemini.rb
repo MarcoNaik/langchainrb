@@ -7,6 +7,7 @@ module Langchain::LLM
     DEFAULTS = {
       chat_model: "gemini-1.5-pro-latest",
       embedding_model: "text-embedding-004",
+      embedding_task_type: "SEMANTIC_SIMILARITY",
       temperature: 0.0
     }
 
@@ -72,16 +73,19 @@ module Langchain::LLM
 
     def embed(
       text:,
-      model: @defaults[:embedding_model]
+      model: @defaults[:embedding_model],
+      task_type: @defaults[:embedding_task_type]
     )
       params = {
+        model: "models/#{model}",
         content: {
           parts: [
             {
               text: text
             }
           ]
-        }
+        },
+        taskType: task_type
       }
 
       uri = URI("https://generativelanguage.googleapis.com/v1beta/models/#{model}:embedContent?key=#{api_key}")
